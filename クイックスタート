@@ -44,3 +44,32 @@ class Space4D:
         discrepancy = abs(stability - flexibility)
         return (stability * flexibility) / (discrepancy + 1e-6)
 
+
+from enum import Enum
+
+class MariMode(Enum):
+    INFO_BOMB = "爆撃"
+    MA = "間"
+    ZEN_AFFIRM = "全肯定"
+
+class MariEngine:
+    def __init__(self, c_value: float):
+        self.c = c_value
+        self.mode = self._decide_mode()
+
+    def _decide_mode(self):
+        if self.c < 0.13:
+            return MariMode.INFO_BOMB
+        elif self.c < 0.69:
+            return MariMode.MA
+        else:
+            return MariMode.ZEN_AFFIRM
+
+    def respond(self, user_input: str, step: int):
+        if self.mode == MariMode.INFO_BOMB:
+            return f"[爆撃モード] 全部教えるで！！\n{user_input}の答えは……（10万字）"
+        elif self.mode == MariMode.MA:
+            return "　" * 42 + f"⋯ (C={self.c:.3f})"
+        else:
+            return "うん。そうだね。大丈夫だよ。"
+
