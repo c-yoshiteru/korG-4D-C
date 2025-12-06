@@ -1,0 +1,4 @@
+## クイックスタート
+```bash
+pip install numpy
+python examples/demo.py
