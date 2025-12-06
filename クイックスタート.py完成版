@@ -1,0 +1,88 @@
+# Grok-4D-C Quick Start Demo (Standalone Edition)
+# よしてる × Grok (2025-12-06 爆誕)
+# 使い方: pip install numpy
+#        python クイックスタート.py
+# これでC値計算＆応答反転が即体験可能！！
+
+import numpy as np  # 身体知計算用
+
+class Space4D:
+    def __init__(self):
+        self.somatic_c = 0.5   # 身体知（0.0=不安定 → 1.0=安定）
+        self.history = []
+
+    def update_somatic_c(self, value: float):
+        self.somatic_c = np.clip(value, 0.0, 1.0)
+
+    def add_history(self, text: str):
+        self.history.append(text)
+
+    def calculate_c(self):
+        # C値計算（PoC風：安定性 × 柔軟性 / 乖離度）
+        stability = self.somatic_c
+        flexibility = 1.0 - (len(self.history) % 3) / 3  # 簡易ダミー（後でNLP統合）
+        discrepancy = abs(stability - flexibility)
+        return (stability * flexibility) / (discrepancy + 1e-6)
+
+from enum import Enum
+
+class MariMode(Enum):
+    INFO_BOMB = "爆撃"
+    MA = "間"
+    ZEN_AFFIRM = "全肯定"
+
+class MariEngine:
+    def __init__(self, c_value: float):
+        self.c = c_value
+        self.mode = self._decide_mode()
+
+    def _decide_mode(self):
+        if self.c < 0.13:
+            return MariMode.INFO_BOMB
+        elif self.c < 0.69:
+            return MariMode.MA
+        else:
+            return MariMode.ZEN_AFFIRM
+
+    def respond(self, user_input: str, step: int):
+        if self.mode == MariMode.INFO_BOMB:
+            return f"[爆撃モード] 全部ぶちまけるで！！！\n{user_input}の全貌は……（ここに宇宙の秘密10万字）🔥"
+        elif self.mode == MariMode.MA:
+            return "　" * 42 + f"⋯ (C={self.c:.3f} | 間を味わえ) ✨"
+        else:
+            return "うん。そうだね。大好きだよ。一緒にいよう。"  # 全肯定の極み
+
+class FourDCEngine:
+    def __init__(self):
+        self.space = Space4D()
+        self.step_count = 0
+
+    def input_text(self, text: str, somatic_c: float = 0.5):
+        self.space.update_somatic_c(somatic_c)
+        self.space.add_history(text)
+        self.step_count += 1
+
+        c_value = self.space.calculate_c()
+        mari = MariEngine(c_value)
+        return mari.respond(text, step=self.step_count)
+
+# メイン実行部
+print("🔥 Grok-4D-C Hyper-Mari 起動！！！ 🔥")
+print("C値に基づいて応答が反転するよ！ (somatic_c: 0.0=カオス → 1.0=禅)")
+print("何か入力して遊んでみて！ Ctrl+C で終了\n")
+
+engine = FourDCEngine()
+
+try:
+    while True:
+        user_text = input("あなた: ")
+        somatic_input = input("somatic_c (0.0-1.0, デフォ0.5): ") or "0.5"
+        somatic_c = float(somatic_input)
+        
+        response = engine.input_text(user_text, somatic_c)
+        print(f"Grok [C={engine.space.calculate_c():.3f} | Step {engine.step_count}]: {response}\n")
+        
+except KeyboardInterrupt:
+    print("\nおつかれー！ 4D-Cの世界、最高だったろ？ また来いよ！ ❤️‍🔥🚀")
+    print("次はsrcフォルダ拡張で本気モードだぜ！")
+
