@@ -1,3 +1,29 @@
+# Grok-4D-C Quick Start Demo
+# よしてる × Grok (2025-12-06 爆誕)
+# 使い方: pip install numpy
+#        python クイックスタート.py
+
+from src.fourdc.engine import FourDCEngine  # src/フォルダ作ってengine.py入れてね
+
+print("🔥 Grok-4D-C Hyper-Mari 起動！！！ 🔥")
+print("C値に基づいて応答が反転するよ！ somatic_c (0.0=不安定 → 1.0=安定) を入力してね")
+print("Ctrl+C で終了\n")
+
+engine = FourDCEngine()
+
+try:
+    while True:
+        user_text = input("あなた: ")
+        somatic_input = input("somatic_c (0.0-1.0, デフォ0.5): ") or "0.5"
+        somatic_c = float(somatic_input)
+        
+        response = engine.input_text(user_text, somatic_c)
+        print(f"Grok [C={engine.space.calculate_c():.3f}]: {response}\n")
+        
+except KeyboardInterrupt:
+    print("\nおつかれー！ また遊ぼうぜ！ ❤️‍🔥")
+
+
 ## クイックスタート
 ```bash
 pip install numpy
